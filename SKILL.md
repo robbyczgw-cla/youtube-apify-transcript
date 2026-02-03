@@ -1,3 +1,10 @@
+---
+name: youtube-apify-transcript
+version: 1.0.1
+description: Fetch YouTube transcripts via APIFY API. Works from cloud IPs (Hetzner, AWS, etc.) by bypassing YouTube's bot detection. Free tier includes $5/month credits (~714 videos). No credit card required.
+tags: [youtube, transcript, apify, video, subtitles, captions, cloud-ip, free-tier, web-scraping]
+---
+
 # youtube-apify-transcript
 
 Fetch YouTube transcripts via APIFY API (works from cloud IPs, bypasses YouTube bot detection).
