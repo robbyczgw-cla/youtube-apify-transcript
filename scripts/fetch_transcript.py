@@ -184,7 +184,12 @@ def format_transcript_text(result):
     
     lines = []
     for caption in captions:
-        text = caption.get("text", "").strip()
+        # Handle both string and dict formats
+        if isinstance(caption, str):
+            text = caption.strip()
+        else:
+            text = caption.get("text", "").strip()
+        
         if text:
             lines.append(text)
     
@@ -204,14 +209,23 @@ def format_transcript_json(result, video_id):
     
     texts = []
     for caption in captions:
-        text = caption.get("text", "").strip()
-        if text:
-            texts.append(text)
-            output["transcript"].append({
-                "start": caption.get("start", 0),
-                "duration": caption.get("duration", 0),
-                "text": text
-            })
+        # Handle both string and dict formats
+        if isinstance(caption, str):
+            text = caption.strip()
+            if text:
+                texts.append(text)
+                output["transcript"].append({
+                    "text": text
+                })
+        else:
+            text = caption.get("text", "").strip()
+            if text:
+                texts.append(text)
+                output["transcript"].append({
+                    "start": caption.get("start", 0),
+                    "duration": caption.get("duration", 0),
+                    "text": text
+                })
     
     output["full_text"] = " ".join(texts)
     
