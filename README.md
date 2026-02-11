@@ -39,7 +39,7 @@ See [SKILL.md](SKILL.md) for full documentation, setup instructions, and usage e
 - [Get API Key](https://console.apify.com/account/integrations)
 - [YouTube Transcripts Actor](https://apify.com/karamelo/youtube-transcripts)
 
-## ⚙️ Requirements
+## ⚙ Requirements
 
 - Python 3.6+
 - `requests` library (`pip install requests`)
