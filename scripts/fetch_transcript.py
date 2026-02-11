@@ -35,7 +35,7 @@ except ImportError:
 
 APIFY_ACTOR_ID = "karamelo~youtube-transcripts"
 APIFY_API_BASE = "https://api.apify.com/v2"
-CACHE_DIR = Path("/root/clawd/memory/transcript-cache")
+CACHE_DIR = Path(os.environ.get("YT_TRANSCRIPT_CACHE_DIR", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".cache")))
 
 
 def get_api_token():
@@ -209,12 +209,11 @@ def run_apify_actor(video_url, api_token, language=None):
         input_data["preferredLanguage"] = language
     
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_token}"
     }
     
-    params = {
-        "token": api_token
-    }
+    params = {}
     
     try:
         # Start the run
