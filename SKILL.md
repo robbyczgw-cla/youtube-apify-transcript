@@ -1,6 +1,6 @@
 ---
 name: youtube-apify-transcript
-version: 1.1.1
+version: 1.1.2
 description: Fetch YouTube transcripts via APIFY API. Works from cloud IPs (Hetzner, AWS, etc.) by bypassing YouTube's bot detection. Free tier includes $5/month credits (~714 videos). No credit card required.
 tags: [youtube, transcript, apify, video, subtitles, captions, cloud-ip, free-tier, web-scraping]
 ---
@@ -94,7 +94,7 @@ python3 scripts/fetch_transcript.py --cache-stats
 python3 scripts/fetch_transcript.py --clear-cache
 ```
 
-Cache location: `/root/clawd/memory/transcript-cache/`
+Cache location: `.cache/` in skill directory (override with `YT_TRANSCRIPT_CACHE_DIR` env var)
 
 ### Batch Mode
 
