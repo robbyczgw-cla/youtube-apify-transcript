@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.3] - 2026-03-03
+
+### Changed
+- Improved auth/cache docs and synced metadata cleanup changes.
+
+
 ## [1.1.2] - 2026-02-11
 
 ### 🆕 Local Caching
