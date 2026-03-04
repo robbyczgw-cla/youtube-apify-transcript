@@ -1,6 +1,6 @@
 ---
 name: youtube-apify-transcript
-version: 1.1.3
+version: 1.2.0
 description: Fetch YouTube transcripts via APIFY API. Works from cloud IPs (Hetzner, AWS, etc.) by bypassing YouTube's bot detection. Features local caching (FREE repeat requests!) and batch mode. Free tier includes $5/month credits (~714 videos). No credit card required.
 tags: [youtube, transcript, apify, video, subtitles, captions, cloud-ip, free-tier, web-scraping, caching, batch]
 metadata: {"openclaw":{"requires":{"bins":["python3"],"env":{"APIFY_API_TOKEN":"required","YT_TRANSCRIPT_CACHE_DIR":"optional - defaults to .cache/ in skill dir"}}}}
@@ -29,7 +29,7 @@ YouTube blocks transcript requests from cloud IPs (AWS, GCP, etc.). APIFY runs t
 
 - 🔗 [APIFY Pricing](https://apify.com/pricing)
 - 🔑 [Get API Key](https://console.apify.com/account/integrations)
-- 🎬 [YouTube Transcripts Actor](https://apify.com/karamelo/youtube-transcripts)
+- 🎬 [YouTube Transcripts Actor](https://apify.com/topaz_sharingan/Youtube-Transcript-Scraper-1)
 
 ## Setup
 
