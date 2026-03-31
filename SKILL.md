@@ -1,9 +1,9 @@
 ---
 name: youtube-apify-transcript
-version: 1.3.1
-description: Fetch YouTube transcripts via APIFY API. Works from cloud IPs (Hetzner, AWS, etc.) by bypassing YouTube's bot detection. Features local caching (FREE repeat requests!), batch mode, and optional AI summarization via claude CLI. Free tier includes $5/month credits (~714 videos). No credit card required.
+version: 1.3.2
+description: Fetch YouTube transcripts via APIFY API. Works from cloud IPs (Hetzner, AWS, etc.) by bypassing YouTube's bot detection. Features local caching (FREE repeat requests!) and batch mode. Free tier includes $5/month credits (~714 videos). No credit card required.
 tags: [youtube, transcript, apify, video, subtitles, captions, cloud-ip, free-tier, web-scraping, caching, batch]
-metadata: {"openclaw":{"requires":{"bins":["python3","claude"],"env":{"APIFY_API_TOKEN":"required","YT_TRANSCRIPT_CACHE_DIR":"optional - defaults to .cache/ in skill dir"}}}}
+metadata: {"openclaw":{"requires":{"bins":["python3"],"env":{"APIFY_API_TOKEN":"required","YT_TRANSCRIPT_CACHE_DIR":"optional - defaults to .cache/ in skill dir"}}}}
 ---
 
 # youtube-apify-transcript
@@ -71,44 +71,7 @@ python3 scripts/fetch_transcript.py "URL" --json --output transcript.json
 
 # Specify language preference
 python3 scripts/fetch_transcript.py "URL" --lang de
-
-# Summarize instead of printing full transcript
-python3 scripts/fetch_transcript.py "URL" --summarize
-
-# Detailed German summary using Sonnet
-python3 scripts/fetch_transcript.py "URL" --summarize --summary-style detailed --summary-lang de --summary-model sonnet
-
-# Include summary in JSON output
-python3 scripts/fetch_transcript.py "URL" --json --summarize
 ```
-
-### Summaries
-
-Summaries are generated via the `claude` CLI and cached inside the same per-video `.json` cache file under `summaries`.
-
-```bash
-# Default summary: brief English summary (3-5 sentences)
-python3 scripts/fetch_transcript.py "URL" --summarize
-
-# Bullet summary
-python3 scripts/fetch_transcript.py "URL" -s --summary-style bullets
-
-# TL;DR in German
-python3 scripts/fetch_transcript.py "URL" -s --summary-style tldr --summary-lang de
-
-# Use a different model alias or full Claude model ID
-python3 scripts/fetch_transcript.py "URL" -s --summary-model sonnet
-python3 scripts/fetch_transcript.py "URL" -s --summary-model anthropic/claude-sonnet-4-6
-
-# JSON output includes a top-level "summary" field
-python3 scripts/fetch_transcript.py "URL" --json --summarize
-```
-
-Supported summary styles:
-- `brief` — 3-5 sentence summary
-- `detailed` — fuller breakdown of topics and key points
-- `bullets` — up to 10 key bullet points
-- `tldr` — one-sentence summary
 
 ### Caching (saves money!)
 
@@ -180,6 +143,10 @@ Today we're going to talk about...
   "full_text": "Hello and welcome to this video..."
 }
 ```
+
+## Agent Instructions
+
+When the user asks to summarize a YouTube video, first fetch the transcript using the script, then summarize the transcript text directly using your own model capabilities. Do NOT use --summarize flag.
 
 ## Error Handling
 

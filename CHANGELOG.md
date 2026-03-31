@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2] - 2026-03-31
+
+### Changed
+- Removed --summarize / --summary-* flags from fetch_transcript.py: summarization now handled by the OpenClaw agent directly using the configured model, not via hardcoded claude CLI subprocess
+- Removed `claude` CLI dependency from skill metadata
+- Updated SKILL.md with agent-level summarization instructions
+
 ## [1.3.1] - 2026-03-31
 
 ### Fixed

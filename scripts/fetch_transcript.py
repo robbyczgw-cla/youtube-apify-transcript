@@ -19,7 +19,6 @@ import argparse
 import json
 import os
 import re
-import subprocess
 import sys
 import time
 from datetime import datetime
@@ -135,69 +134,10 @@ def save_to_cache(video_id, result, language=None):
         "fetched_at": datetime.utcnow().isoformat() + "Z",
         "captions": captions,
         "full_text": raw_text,
-        "summaries": {},
         "_raw_result": result  # Keep original for full fidelity
     }
 
     write_cache_data(video_id, cache_data)
-
-
-def summarize_transcript(text, style="brief", model="haiku", lang="en"):
-    """Summarize transcript text using claude CLI."""
-    model_map = {
-        "haiku": "claude-haiku-4-5",
-        "sonnet": "claude-sonnet-4-6",
-        "opus": "claude-opus-4-6",
-    }
-    resolved_model = model_map.get(model, model)
-
-    style_prompts = {
-        "brief": "Summarize in 3-5 sentences.",
-        "detailed": "Write a detailed summary covering all main topics, arguments, and key points.",
-        "bullets": "Summarize as a bullet list of the most important points (max 10 bullets).",
-        "tldr": "Write a single sentence TL;DR summary.",
-    }
-    prompt = style_prompts.get(style, style_prompts["brief"])
-    if lang != "en":
-        prompt += f" Respond in language: {lang}."
-
-    full_prompt = f"{prompt}\n\nTranscript:\n{text[:15000]}"
-
-    result = subprocess.run(
-        ["claude", "--print", "--model", resolved_model, full_prompt],
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"claude CLI error: {result.stderr}")
-    return result.stdout.strip()
-
-
-def get_summary_cache_key(style, lang):
-    """Build summary cache key."""
-    return f"{style}_{lang}"
-
-
-def get_or_create_summary(result, video_id, use_cache, style="brief", model="haiku", lang="en"):
-    """Get cached summary or generate a new one."""
-    cache_key = get_summary_cache_key(style, lang)
-    summaries = result.setdefault("summaries", {})
-
-    if use_cache and summaries.get(cache_key):
-        print("[cached summary]", file=sys.stderr)
-        return summaries[cache_key]
-
-    print("Summarizing transcript...", file=sys.stderr)
-    summary = summarize_transcript(format_transcript_text(result), style=style, model=model, lang=lang)
-
-    if use_cache:
-        cache_data = load_from_cache(video_id) or result.copy()
-        cache_data.setdefault("summaries", {})[cache_key] = summary
-        write_cache_data(video_id, cache_data)
-        summaries[cache_key] = summary
-
-    return summary
 
 
 def clear_cache():
@@ -443,7 +383,7 @@ def format_transcript_text(result):
     return "\n".join(lines)
 
 
-def format_transcript_json(result, video_id, summary=None):
+def format_transcript_json(result, video_id):
     """Format transcript as JSON with metadata."""
     # Handle cached format vs raw APIFY format
     raw_result = result.get("_raw_result", result)
@@ -478,8 +418,6 @@ def format_transcript_json(result, video_id, summary=None):
                 "text": text
             })
         output["full_text"] = " ".join(texts)
-        if summary is not None:
-            output["summary"] = summary
         return output
     for caption in captions:
         if caption is None:
@@ -505,9 +443,7 @@ def format_transcript_json(result, video_id, summary=None):
             continue
     
     output["full_text"] = " ".join(texts)
-    if summary is not None:
-        output["summary"] = summary
-    
+
     return output
 
 
@@ -629,27 +565,6 @@ def main():
         help="Preferred transcript language (e.g., 'en', 'de')"
     )
     parser.add_argument(
-        "--summarize", "-s",
-        action="store_true",
-        help="Summarize the transcript instead of printing full transcript text"
-    )
-    parser.add_argument(
-        "--summary-model",
-        default="haiku",
-        help="Summary model alias or full Claude model ID (default: haiku)"
-    )
-    parser.add_argument(
-        "--summary-style",
-        default="brief",
-        choices=["brief", "detailed", "bullets", "tldr"],
-        help="Summary style (default: brief)"
-    )
-    parser.add_argument(
-        "--summary-lang",
-        default="en",
-        help="Output language for summary (default: en)"
-    )
-    parser.add_argument(
         "--actor",
         default=DEFAULT_APIFY_ACTOR_ID,
         help=f"APIFY actor ID (default: {DEFAULT_APIFY_ACTOR_ID})"
@@ -702,10 +617,6 @@ def main():
     
     # Batch mode
     if args.batch:
-        if args.summarize:
-            print("Error: --summarize is only supported for single-video mode.", file=sys.stderr)
-            sys.exit(1)
-
         results = process_batch(args.batch, api_token, use_cache, args.lang, args.json, args.actor)
         
         if args.json and results:
@@ -725,23 +636,10 @@ def main():
     # Single URL mode
     result, from_cache = process_single(args.url, api_token, use_cache, args.lang, args.actor)
     video_id = extract_video_id(args.url)
-    summary = None
 
-    if args.summarize:
-        summary = get_or_create_summary(
-            result,
-            video_id,
-            use_cache,
-            style=args.summary_style,
-            model=args.summary_model,
-            lang=args.summary_lang,
-        )
-    
     # Format output
     if args.json:
-        output = json.dumps(format_transcript_json(result, video_id, summary=summary), indent=2, ensure_ascii=False)
-    elif args.summarize:
-        output = summary
+        output = json.dumps(format_transcript_json(result, video_id), indent=2, ensure_ascii=False)
     else:
         output = format_transcript_text(result)
     
