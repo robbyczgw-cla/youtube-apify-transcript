@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1] - 2026-03-31
+
+### Fixed
+- Declared `claude` CLI as required binary in metadata (`bins`) — summarization feature was invoking it without declaration, causing ClawHub review warnings
+- Fixed model IDs in summarize function: removed `anthropic/` provider prefix (Claude CLI only accepts short IDs like `claude-haiku-4-5`)
+- Updated skill description to mention optional AI summarization feature
+
 ## [1.3.0] - 2026-03-31
 
 ### Added
