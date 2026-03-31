@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3] - 2026-03-31
+
+### Fixed
+- Declared Python dependency `requests` explicitly in skill metadata and install hints
+- Expanded package metadata so required env vars and optional cache env var are stated more explicitly for registry scanners
+- Clarified setup docs around `APIFY_API_TOKEN` and Python dependency installation
+
 ## [1.3.2] - 2026-03-31
 
 ### Changed
