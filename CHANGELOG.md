@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0] - 2026-03-31
+
+### Added
+- Added `--summarize` / `-s` to generate transcript summaries with the Claude CLI.
+- Added `--summary-model`, `--summary-style`, and `--summary-lang` flags for summary customization.
+- Cached summaries in each transcript cache file under the `summaries` key and reused cached summaries when available.
+- Added JSON output support for summaries via a top-level `summary` field.
+
 ## [1.1.3] - 2026-03-03
 
 ### Changed
