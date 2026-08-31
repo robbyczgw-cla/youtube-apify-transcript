@@ -3,7 +3,7 @@
 ## [1.4.0] - 2026-08-31
 
 ### Fixed
-
+- Removed `package.json`. It declared an npm package that was never published and had no `main`, dependencies, or scripts. ClawHub CLI 0.22+ refuses to publish any folder containing a `package.json` as a skill.
 - Corrected actor price from $0.007 to $0.01 per result (pay per event). Apify API and store sheet on 2026-08-31 list $10.00 / 1,000 results.
 - `fetch_transcript.py`: cost lines now print $0.01 instead of $0.007 (lines were understating spend by 30%).
 - `fetch_transcript.py`: `--lang` was accepted and silently dropped for the default actor. It now warns on stderr and names the two actors that do support a language input.
